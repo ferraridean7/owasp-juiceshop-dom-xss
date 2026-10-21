@@ -105,9 +105,20 @@ When a potential DOM XSS exploitation incident is detected by Security Operation
 
 ### Phase 2: Containment (Isolation)
 1. **WAF Emergency Rule Deployment**: Immediately deploy a temporary WAF regex blocking rule targeting suspicious input vectors on `/search`:
-   ```regex
-   (?i)(<script|javascript:|document\.cookie|document\.location|localStorage)
-   ```
+
+```regex
+(?i)(<script|javascript:|document\.cookie|document\.location|localStorage)
+```
+2. **Session Invalidation**: Issue an automated session revocation command to force re-authentication for all user sessions active during the incident timeframe.
+
+### Phase 3: Eradication & Recovery
+1. **Patch Deployment**: Code review and deploy the secure code remediation utilizing `textContent` or `DOMPurify` (as specified in SR-01/SR-02) directly to production environment.
+2. **Session Invalidation**: Terminate and invalidate all active user sessions, JWT tokens, and session cookies generated during the breach window to eliminate secondary session hijacking risks.
+
+### Phase 4: Post-Incident Activity (Lessons Learned)
+1. **Root Cause Analysis (RCA)**: Conduct a post-mortem technical review to identify why the unsafe DOM manipulation passed the CI/CD static application security testing (SAST) pipelines.
+2. **Policy Offloading**: Verify code structural integrity in production, ensure no further XSS anomalies are detected, and gracefully offload the temporary emergency WAF rules.
+3. **Risk Register Update**: Record the incident timeline, CVSS severity, and business impact within the Enterprise Risk Register.
 
 ## About the Author
 
