@@ -50,3 +50,6 @@ The primary objective of this documentation is to deliver structured engineering
      ![Normal State](./screenshots/normal.png)
    * **Triggered State (XSS Execution)**:
      ![XSS Triggered](./screenshots/dom-xss.png)
+   * **Result State (XSS Execution)**:
+     ![XSS Triggered](./screenshots/result.png)
+
