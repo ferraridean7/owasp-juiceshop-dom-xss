@@ -2,7 +2,7 @@
 ## Case Study: DOM-Based Cross-Site Scripting (XSS) Remediation
 
 > **DISCLAIMER & ETHICAL STATEMENT**  
-> This project is a security analysis study, risk governance framework mapping, and security requirements engineering exercise (GRC Documentation) using **OWASP Juice Shop** (a locally hosted lab environment intentionally designed for educational purposes)[cite: 1]. This document does not represent security testing conducted on unauthorized or commercial enterprise systems[cite: 1].
+> This project is a security analysis study, risk governance framework mapping, and security requirements engineering exercise (GRC Documentation) using **OWASP Juice Shop** (a locally hosted lab environment intentionally designed for educational purposes). This document does not represent security testing conducted on unauthorized or commercial enterprise systems.
 
 ---
 
@@ -89,5 +89,24 @@ const searchQuery = urlParams.get('q');
 // Neutralizes malicious tags (<script>, <iframe>) while preserving valid markup
 const cleanHTML = DOMPurify.sanitize(searchQuery);
 document.getElementById('search-result').innerHTML = "Results for: " + cleanHTML;
+```
 
+---
 
+## 6. Security Response Plan (SRP) - Operational Incident Handling Procedures
+
+When a potential DOM XSS exploitation incident is detected by Security Operations Center (SOC) monitoring systems, the following Incident Response Workflow must be executed:
+
+### Phase 1: Triage & Identification
+1. **Log Analysis**: Query Web Application Firewall (WAF) and NGINX/Apache access logs for anomalous GET requests containing search parameters (`q=`) with encoded HTML characters (`%3Cscript%3E`, `%3Ciframe%3E`, `javascript:`).
+2. **Impact Assessment**: Analyze client-side application state to identify if hijacked session tokens (`JWT`, `Cookie`, or `localStorage` keys) were exfiltrated during the activity window.
+
+### Phase 2: Containment (Isolation)
+1. **WAF Emergency Rule Deployment**: Immediately deploy a temporary WAF regex blocking rule targeting suspicious input vectors on `/search`:
+   ```regex
+   (?i)(<script|javascript:|document\.cookie|document\.location|localStorage)
+   ```
+
+## About the Author
+
+Ex-Product Manager pivoting into Governance, Risk, and Compliance (GRC). This repository demonstrates the practical application of technical vulnerability research mapped directly to enterprise security controls and compliance frameworks (ISO/IEC 27001 & NIST CSF).
