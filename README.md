@@ -41,5 +41,6 @@ The primary objective of this documentation is to deliver structured engineering
 
 1. **Vulnerability Mechanics**: User inputs supplied to search parameter `q` are rendered directly into the Document Object Model (DOM) without proper context-aware sanitization.
 2. **Exploitation Payload**:
-   ```html
-   <iframe src="javascript:alert(`xss`)">
+```html
+<iframe src="javascript:alert(`xss`)">
+```
