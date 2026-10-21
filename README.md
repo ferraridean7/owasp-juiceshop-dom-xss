@@ -61,7 +61,7 @@ Engineering teams must adhere to the following technical security specifications
 ### 5.1 Security Acceptance Criteria
 * **SR-01 (Context-Aware Output Encoding)**: Developers shall not use unsafe DOM manipulation properties such as `element.innerHTML`, `document.write()`, or `eval()` for untrusted input handling. Safe DOM text assignment methods like `element.textContent` or `element.innerText` must be enforced.
 * **SR-02 (Client-Side Input Sanitization)**: If HTML rendering is required by business logic, untrusted input strings must be passed through a validated sanitization library (e.g., DOMPurify) before binding to DOM elements.
-* **SR-03 (Content Security Policy Enforcement)**: The web server must enforce strict CSP HTTP headers restricting unauthorized inline script execution:
+* **SR-03 (Content Security Policy Enforcement)**: The web server must enforce strict CSP HTTP headers restricting unauthorized inline script execution: `Content-Security-Policy: default-src 'self'; script-src 'self'; object-src 'none';`
 
 ### 5.2 Technical Code Remediation Snippets
 #### A. Vulnerable Code Pattern (Current State)
@@ -90,6 +90,8 @@ const searchQuery = urlParams.get('q');
 const cleanHTML = DOMPurify.sanitize(searchQuery);
 document.getElementById('search-result').innerHTML = "Results for: " + cleanHTML;
 ```
+
+---
 
 ---
 
