@@ -51,3 +51,41 @@ The primary objective of this documentation is to deliver structured engineering
 
    * **Triggered State (DOM-based XSS Execution)**:  
      ![XSS Execution](./screenshots/dom-xss.png)
+
+---
+
+## 5. Security Requirements Document (SRD) & Technical Remediation
+
+Engineering teams must adhere to the following technical security specifications and code implementation standards:
+
+### 5.1 Security Acceptance Criteria
+* **SR-01 (Context-Aware Output Encoding)**: Developers shall not use unsafe DOM manipulation properties such as `element.innerHTML`, `document.write()`, or `eval()` for untrusted input handling. Safe DOM text assignment methods like `element.textContent` or `element.innerText` must be enforced.
+* **SR-02 (Client-Side Input Sanitization)**: If HTML rendering is required by business logic, untrusted input strings must be passed through a validated sanitization library (e.g., DOMPurify) before binding to DOM elements.
+* **SR-03 (Content Security Policy Enforcement)**: The web server must enforce strict CSP HTTP headers restricting unauthorized inline script execution:
+  ```http
+  Content-Security-Policy: default-src 'self'; script-src 'self'; object-src 'none';
+
+// UNSAFE: Directly evaluating and inserting raw query strings into innerHTML
+const urlParams = new URLSearchParams(window.location.search);
+const searchQuery = urlParams.get('q');
+
+// Vulnerable DOM sink
+document.getElementById('search-result').innerHTML = "Results for: " + searchQuery;
+
+// SECURE: Enforcing textContent to neutralize executable script tags
+const urlParams = new URLSearchParams(window.location.search);
+const searchQuery = urlParams.get('q');
+
+// Safe DOM sink treating input strictly as literal string
+document.getElementById('search-result').textContent = "Results for: " + searchQuery;
+
+// SECURE: Sanitizing input using DOMPurify before HTML rendering
+import DOMPurify from 'dompurify';
+
+const urlParams = new URLSearchParams(window.location.search);
+const searchQuery = urlParams.get('q');
+
+// Neutralizes malicious tags (<script>, <iframe>) while preserving valid markup
+const cleanHTML = DOMPurify.sanitize(searchQuery);
+document.getElementById('search-result').innerHTML = "Results for: " + cleanHTML;
+
