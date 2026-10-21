@@ -2,13 +2,13 @@
 ## Case Study: DOM-Based Cross-Site Scripting (XSS) Remediation
 
 > **DISCLAIMER & ETHICAL STATEMENT**  
-> This project is a security analysis study, risk governance framework mapping, and security requirements engineering exercise (GRC Documentation) using **OWASP Juice Shop** (a locally hosted lab environment intentionally designed for educational purposes). This document does not represent security testing conducted on unauthorized or commercial enterprise systems.
+> This project is a security analysis study, risk governance framework mapping, and security requirements engineering exercise (GRC Documentation) using **OWASP Juice Shop** (a locally hosted lab environment intentionally designed for educational purposes)[cite: 1]. This document does not represent security testing conducted on unauthorized or commercial enterprise systems[cite: 1].
 
 ---
 
 ## 1. Executive Summary
 
-This document outlines the technical security evaluation, risk assessment, **Security Requirements Document (SRD)**, and **Security Response Plan (SRP)** addressing a identified DOM-based Cross-Site Scripting (XSS) vulnerability within the OWASP Juice Shop search functionality.
+This document outlines the technical security evaluation, risk assessment, **Security Requirements Document (SRD)**, and **Security Response Plan (SRP)** addressing an identified DOM-based Cross-Site Scripting (XSS) vulnerability within the OWASP Juice Shop search functionality.
 
 The primary objective of this documentation is to deliver structured engineering requirements for modern application development teams and establish actionable incident response procedures for security operations center (SOC) personnel.
 
@@ -37,19 +37,9 @@ The primary objective of this documentation is to deliver structured engineering
 
 ---
 
-## 4. Proof of Concept (PoC)
+## 4. Proof of Concept (PoC) & Execution Evidence
 
 1. **Vulnerability Mechanics**: User inputs supplied to search parameter `q` are rendered directly into the Document Object Model (DOM) without proper context-aware sanitization.
-
 2. **Exploitation Payload**:
    ```html
    <iframe src="javascript:alert(`xss`)">
-
-3. **Execution Evidence**:
-   * **Baseline State**:
-     ![Normal State](./screenshots/normal.png)
-   * **Triggered State (XSS Execution)**:
-     ![XSS Triggered](./screenshots/dom-xss.png)
-   * **Result State (XSS Execution)**:
-     ![XSS Triggered](./screenshots/result.png)
-
