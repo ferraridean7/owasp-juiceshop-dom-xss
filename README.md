@@ -44,3 +44,10 @@ The primary objective of this documentation is to deliver structured engineering
 ```html
 <iframe src="javascript:alert(`xss`)">
 ```
+3. **Execution Evidence (Embedded Visuals)**:
+
+   * **Baseline State (Normal Search Application)**:  
+     ![Baseline State](./screenshots/normal.png)
+
+   * **Triggered State (DOM-based XSS Execution)**:  
+     ![XSS Execution](./screenshots/dom-xss.png)
