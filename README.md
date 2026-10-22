@@ -14,15 +14,18 @@ The primary objective of this documentation is to deliver structured engineering
 
 ---
 
-## 2. Risk & Impact Analysis
+## 2. Risk & Impact Analysis & Risk Treatment Plan
 
-| Parameter | Metrics and Description |
-| :--- | :--- |
-| **Target Feature** | Global Search Field (`/search?q=...`) |
-| **Vulnerability Classification** | DOM-based Cross-Site Scripting (CWE-79) |
-| **CVSS v3.1 Severity Rating** | **7.2 (HIGH)** (`CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N`) |
-| **Risk Matrix Alignment** | High / Medium-High (NIST SP 800-30 Rev. 1 Alignment) |
-| **Business Impact** | Arbitrary JavaScript execution on client-side browsers, enabling session token compromise, unauthorized retrieval of sensitive local browser storage, and client-side interface defacement. |
+| Parameter | Initial Assessment (Pre-Mitigation) | Post-Mitigation (Residual Risk) |
+| :--- | :--- | :--- |
+| **Vulnerability** | DOM-based Cross-Site Scripting (CWE-79) | Remediated / Neutralized |
+| **CVSS v3.1 Score** | **7.2 (HIGH)** (`CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N`) | **0.0 (NONE)** or **1.8 (LOW)** (Context Dependent) |
+| **Risk Treatment Strategy** | N/A | **Risk Reduction (Mitigation)** |
+| **Risk Owner** | Lead Frontend Engineer / Product Owner | Head of Information Security (Sign-off) |
+| **Remediation SLA** | **7 Business Days** (High Severity Standard) | Verified & Closed |
+
+### 2.1 Residual Risk Justification
+By enforcing context-aware encoding (`textContent`) and deploying DOMPurify sanitization alongside Content Security Policy (CSP) headers, the attack vector is completely severed. The execution sink no longer evaluates untrusted input as executable script code, reducing the impact and exploitability metrics to zero.
 
 ---
 
@@ -91,6 +94,11 @@ const cleanHTML = DOMPurify.sanitize(searchQuery);
 document.getElementById('search-result').innerHTML = "Results for: " + cleanHTML;
 ```
 
+### 5.3 Automated Security Controls (CI/CD Pipeline Integration)
+To prevent regression and enforce proactive security controls (NIST CSF PR.PS-01):
+1. **SAST Integration**: Mandatory integration of Static Application Security Testing (e.g., SonarQube, Semgrep, or ESLint Security Rules) within GitHub Actions CI/CD pipelines.
+2. **Linting Rules**: Enforce AST rules blocking dangerous DOM sinks (`innerHTML`, `document.write`, `eval`) during pull-request checks.
+3. **Build Failure Trigger**: Any pull request introducing unsafe innerHTML assignment without DOMPurify wrapping will automatically fail the build pipeline.
 ---
 
 ---
@@ -119,6 +127,7 @@ When a potential DOM XSS exploitation incident is detected by Security Operation
 1. **Root Cause Analysis (RCA)**: Conduct a post-mortem technical review to identify why the unsafe DOM manipulation passed the CI/CD static application security testing (SAST) pipelines.
 2. **Policy Offloading**: Verify code structural integrity in production, ensure no further XSS anomalies are detected, and gracefully offload the temporary emergency WAF rules.
 3. **Risk Register Update**: Record the incident timeline, CVSS severity, and business impact within the Enterprise Risk Register.
+4. **Governance & Exception Policy**: If the engineering team cannot meet the **7-Day Remediation SLA** due to critical business blockers, a formal **Risk Acceptance / Exception Request** must be submitted to the Risk Committee. The temporary WAF regex blocking rule will remain active as a *Compensating Control* subject to weekly review.
 
 ## About the Author
 
